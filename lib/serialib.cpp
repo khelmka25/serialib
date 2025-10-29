@@ -464,20 +464,10 @@ int serialib::writeBytes(const void *Buffer, const unsigned int NbBytes, unsigne
 {
 #if defined (_WIN32) || defined( _WIN64)
     // Write data:
-    // https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile
-    // BOOL WriteFile(
-    //   [in]                HANDLE       hFile,
-    //   [in]                LPCVOID      lpBuffer,
-    //   [in]                DWORD        nNumberOfBytesToWrite,
-    //   [out, optional]     LPDWORD      lpNumberOfBytesWritten,
-    //   [in, out, optional] LPOVERLAPPED lpOverlapped
-    // );
-    DWORD nbBytesWritten = 0ul;
-    if(!WriteFile(hSerial, Buffer, NbBytes, &nbBytesWritten, NULL))
+    if(!WriteFile(hSerial, Buffer, NbBytes, (LPDWORD)NbBytesWritten, NULL))
         // Error while writing, return -1
         return -1;
     // Write operation successfull
-    *NbBytesWritten = nbBytesWritten;
     return 1;
 #endif
 #if defined (__linux__) || defined(__APPLE__)
